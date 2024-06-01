@@ -10,12 +10,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, String> {
 
     List<Produto> findByCategoria(Categoria categoria);
+
+    Optional<Produto> findByNome(String nome);
 
     @Query(value = "SELECT * FROM produtos WHERE nome LIKE %:trechoNome%", nativeQuery = true)
     List<Produto> buscaPorTrechoDeNome(@Param("trechoNome") String trechoNome);
