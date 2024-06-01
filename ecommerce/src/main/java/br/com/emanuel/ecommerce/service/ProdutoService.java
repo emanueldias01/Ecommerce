@@ -2,6 +2,7 @@ package br.com.emanuel.ecommerce.service;
 
 import br.com.emanuel.ecommerce.dto.ProdutoRequestDTO;
 import br.com.emanuel.ecommerce.dto.ProdutoResponseDTO;
+import br.com.emanuel.ecommerce.dto.ProdutoUpdateDTO;
 import br.com.emanuel.ecommerce.exceptions.DescontoInvalidoException;
 import br.com.emanuel.ecommerce.exceptions.ProdutoExistException;
 import br.com.emanuel.ecommerce.model.Categoria;
@@ -77,9 +78,19 @@ public class ProdutoService {
         }
     }
 
-    public ProdutoResponseDTO setStatus(String id, Status status){
+    public ProdutoResponseDTO setStatusService(String id, Status status){
         var produto = repository.getReferenceById(id);
         produto.setStatus(status);
         return new ProdutoResponseDTO(produto);
+    }
+
+    public ProdutoResponseDTO updateProdutoService(ProdutoUpdateDTO data){
+        var produto = repository.getReferenceById(data.getId());
+        produto.updateInfo(data);
+        return new ProdutoResponseDTO(produto);
+    }
+
+    public void deleteProduto(String id){
+        repository.deleteById(id);
     }
 }

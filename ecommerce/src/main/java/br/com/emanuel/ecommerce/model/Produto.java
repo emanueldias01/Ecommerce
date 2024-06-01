@@ -1,6 +1,7 @@
 package br.com.emanuel.ecommerce.model;
 
 import br.com.emanuel.ecommerce.dto.ProdutoRequestDTO;
+import br.com.emanuel.ecommerce.dto.ProdutoUpdateDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -57,4 +58,24 @@ public class Produto {
         this.imagem = data.getImagem();
     }
 
+    public void updateInfo(ProdutoUpdateDTO data) {
+        if(data.getNome() != null){
+            this.nome = data.getNome();
+        }
+        if(data.getDescricao() != null){
+            this.descricao = data.getDescricao();
+        }
+        if(data.getCategoria() != null){
+            this.categoria = data.getCategoria();
+        }
+        if(data.getPreco() != null){
+            this.preco = data.getPreco();
+        }
+        if(data.getImagem() != null){
+            this.imagem = data.getImagem();
+        }
+        if(data.getStatus() != null){
+            this.status = data.getStatus();
+        }
+    }
 }
