@@ -3,28 +3,26 @@ package br.com.emanuel.ecommerce.dto;
 import br.com.emanuel.ecommerce.model.Categoria;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-public class ProdutoRequestDTO {
+public record ProdutoRequestDTO(
 
     @NotBlank
-    private String nome;
+     String nome,
 
     @NotBlank
-    private Categoria categoria;
+     Categoria categoria,
 
     @NotBlank
-    private String descricao;
+     String descricao,
 
     @NotNull
-    private BigDecimal preco;
+     BigDecimal preco,
 
     @NotBlank
-    private String imagem;
-
+    String imagem
+)
+{
 }

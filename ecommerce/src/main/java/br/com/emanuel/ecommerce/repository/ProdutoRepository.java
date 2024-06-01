@@ -11,10 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Repository
-public interface ProdutoRepository extends JpaRepository<Produto, String> {
+public interface ProdutoRepository extends JpaRepository<Produto, UUID> {
 
     List<Produto> findByCategoria(Categoria categoria);
 

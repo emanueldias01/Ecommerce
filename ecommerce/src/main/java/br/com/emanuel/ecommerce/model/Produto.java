@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table(name = "produtos")
@@ -20,7 +21,7 @@ public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     private String nome;
 
@@ -51,11 +52,11 @@ public class Produto {
     }
 
     public Produto(ProdutoRequestDTO data) {
-        this.nome = data.getNome();
-        this.descricao = data.getDescricao();
-        this.categoria = data.getCategoria();
-        this.preco = data.getPreco();
-        this.imagem = data.getImagem();
+        this.nome = data.nome();
+        this.descricao = data.descricao();
+        this.categoria = data.categoria();
+        this.preco = data.preco();
+        this.imagem = data.imagem();
     }
 
     public void updateInfo(ProdutoUpdateDTO data) {

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProdutoService {
@@ -33,8 +34,10 @@ public class ProdutoService {
         return repository.buscaPorTrechoDeNome(trechoNome).stream().map(ProdutoResponseDTO::new).toList();
     }
 
-    public ProdutoResponseDTO getProdutoByIdService(String id){
-        return (ProdutoResponseDTO) repository.findById(id).stream().map(p -> new ProdutoResponseDTO(p));
+    public ProdutoResponseDTO getProdutoByIdService(String idString) {
+        UUID id = UUID.fromString(idString);
+        Produto produto = repository.findById(id).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+        return new ProdutoResponseDTO(produto);
     }
 
     public List<ProdutoResponseDTO> getProdutosNaPromocaoService(){
@@ -50,7 +53,7 @@ public class ProdutoService {
     }
 
     public ProdutoResponseDTO createProdutoService(ProdutoRequestDTO data){
-        var verificaProduto = repository.findByNome(data.getNome());
+        var verificaProduto = repository.findByNome(data.nome());
         if(verificaProduto.isEmpty()){
             Produto produtoSave = new Produto(data);
             produtoSave.setDesconto(0.0);
@@ -62,15 +65,18 @@ public class ProdutoService {
         }
     }
 
-    public ProdutoResponseDTO setDescontoInProdutoService(String id, Double desconto){
+    public ProdutoResponseDTO setDescontoInProdutoService(String idString, Double desconto){
+        UUID id = UUID.fromString(idString);
         if(desconto > 0){
             var produto = repository.getReferenceById(id);
             produto.setDesconto(desconto);
             var precoAtual = produto.getPreco();
             var cem = new BigDecimal("100");
             var descontoBigDecimal = new BigDecimal(desconto);
-            var porcentagemPreco = cem.subtract(descontoBigDecimal);
-            var novoPreco = precoAtual.multiply(porcentagemPreco);
+
+            var porcentagemDesconto = cem.subtract(descontoBigDecimal);
+
+            var novoPreco = precoAtual.multiply(porcentagemDesconto).divide(cem);
             produto.setPreco(novoPreco);
             return new ProdutoResponseDTO(produto);
         }else {
@@ -78,7 +84,8 @@ public class ProdutoService {
         }
     }
 
-    public ProdutoResponseDTO setStatusService(String id, Status status){
+    public ProdutoResponseDTO setStatusService(String idString, Status status){
+        UUID id = UUID.fromString(idString);
         var produto = repository.getReferenceById(id);
         produto.setStatus(status);
         return new ProdutoResponseDTO(produto);
@@ -90,7 +97,8 @@ public class ProdutoService {
         return new ProdutoResponseDTO(produto);
     }
 
-    public void deleteProduto(String id){
+    public void deleteProduto(String idString){
+        UUID id = UUID.fromString(idString);
         repository.deleteById(id);
     }
 }

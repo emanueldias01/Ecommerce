@@ -5,10 +5,11 @@ import br.com.emanuel.ecommerce.model.Status;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 public class ProdutoUpdateDTO {
-    private String id;
+    private UUID id;
 
     private String nome;
 
