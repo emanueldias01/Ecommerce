@@ -1,6 +1,5 @@
 package br.com.emanuel.ecommerce.repository;
 
-import br.com.emanuel.ecommerce.dto.ProdutoResponseDTO;
 import br.com.emanuel.ecommerce.model.Categoria;
 import br.com.emanuel.ecommerce.model.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;

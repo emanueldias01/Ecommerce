@@ -3,24 +3,22 @@ package br.com.emanuel.ecommerce.service;
 import br.com.emanuel.ecommerce.dto.ProdutoRequestDTO;
 import br.com.emanuel.ecommerce.dto.ProdutoResponseDTO;
 import br.com.emanuel.ecommerce.dto.ProdutoUpdateDTO;
-import br.com.emanuel.ecommerce.exceptions.DescontoInvalidoException;
-import br.com.emanuel.ecommerce.exceptions.ProdutoExistException;
 import br.com.emanuel.ecommerce.model.Categoria;
 import br.com.emanuel.ecommerce.model.Produto;
 import br.com.emanuel.ecommerce.model.Status;
 import br.com.emanuel.ecommerce.repository.ProdutoRepository;
+import br.com.emanuel.ecommerce.validations.ProdutoValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ProdutoService {
+public class ProdutoService extends ProdutoValidations {
 
     @Autowired
-    ProdutoRepository repository;
+    private ProdutoRepository repository;
 
     public List<ProdutoResponseDTO> getAllProdutosService(){
         return repository.findAll().stream().map(ProdutoResponseDTO::new).toList();
@@ -53,35 +51,16 @@ public class ProdutoService {
     }
 
     public ProdutoResponseDTO createProdutoService(ProdutoRequestDTO data){
-        var verificaProduto = repository.findByNome(data.nome());
-        if(verificaProduto.isEmpty()){
+            verificaSeProdutoExiste(data.nome());
             Produto produtoSave = new Produto(data);
-            produtoSave.setDesconto(0.0);
-            produtoSave.setStatus(Status.ativo);
+            setValoresPadroesDeProdutoCriado(produtoSave);
             repository.save(produtoSave);
             return new ProdutoResponseDTO(produtoSave);
-        }else {
-            throw new ProdutoExistException("O produto que voce está tendando registrar já existe");
-        }
     }
 
     public ProdutoResponseDTO setDescontoInProdutoService(String idString, Double desconto){
         UUID id = UUID.fromString(idString);
-        if(desconto > 0){
-            var produto = repository.getReferenceById(id);
-            produto.setDesconto(desconto);
-            var precoAtual = produto.getPreco();
-            var cem = new BigDecimal("100");
-            var descontoBigDecimal = new BigDecimal(desconto);
-
-            var porcentagemDesconto = cem.subtract(descontoBigDecimal);
-
-            var novoPreco = precoAtual.multiply(porcentagemDesconto).divide(cem);
-            produto.setPreco(novoPreco);
-            return new ProdutoResponseDTO(produto);
-        }else {
-            throw new DescontoInvalidoException("O desconto inserido é inválido");
-        }
+        return aplicaDescontoNoProduto(id, desconto);
     }
 
     public ProdutoResponseDTO setStatusService(String idString, Status status){

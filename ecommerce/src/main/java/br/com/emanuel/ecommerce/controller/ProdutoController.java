@@ -2,7 +2,6 @@ package br.com.emanuel.ecommerce.controller;
 
 import br.com.emanuel.ecommerce.dto.*;
 import br.com.emanuel.ecommerce.model.Categoria;
-import br.com.emanuel.ecommerce.model.Status;
 import br.com.emanuel.ecommerce.service.ProdutoService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import java.util.UUID;
 public class ProdutoController {
 
     @Autowired
-    ProdutoService service;
+    private ProdutoService service;
 
     @GetMapping
     public ResponseEntity<List<ProdutoResponseDTO>> getAllProdutos(){
