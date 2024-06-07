@@ -17,7 +17,7 @@ public class ProdutoValidations {
     private ProdutoRepository repository;
 
     protected void verificaSeProdutoExiste(String nome){
-        var produtoManipulavel = repository.findByNomeClient(nome);
+        var produtoManipulavel = repository.findByNome(nome);
         if(produtoManipulavel.isEmpty()){}
         else {
             throw new ProdutoExistException("O produto que voce está tendando registrar já existe");

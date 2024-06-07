@@ -19,8 +19,8 @@ public interface ProdutoRepository extends JpaRepository<Produto, UUID> {
     List<Produto> findByCategoriaClient(@Param("categoria") Categoria categoria);
 
 
-    @Query(value = "SELECT * FROM produtos WHERE nome = :nome AND status = 'ativo'", nativeQuery = true)
-    Optional<Produto> findByNomeClient(@Param("nome") String nome);
+    @Query(value = "SELECT * FROM produtos WHERE nome = :nome", nativeQuery = true)
+    Optional<Produto> findByNome(@Param("nome") String nome);
 
     @Query(value = "SELECT * FROM produtos WHERE nome LIKE %:trechoNome% AND status = 'ativo'", nativeQuery = true)
     List<Produto> buscaPorTrechoDeNomeClient(@Param("trechoNome") String trechoNome);
