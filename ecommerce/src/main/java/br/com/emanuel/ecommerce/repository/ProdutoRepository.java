@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,18 +15,24 @@ import java.util.UUID;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, UUID> {
 
-    List<Produto> findByCategoria(Categoria categoria);
+    @Query(value = "SELECT * FROM produtos WHERE categoria = :categoria AND status = 'ativo'", nativeQuery = true)
+    List<Produto> findByCategoriaClient(@Param("categoria") Categoria categoria);
 
-    Optional<Produto> findByNome(String nome);
+    @Query(value = "SELECT * FROM produtos WHERE nome = :nome AND status = 'ativo'", nativeQuery = true)
+    Optional<Produto> findByNomeClient(@Param("nome") String nome);
 
-    @Query(value = "SELECT * FROM produtos WHERE nome LIKE %:trechoNome%", nativeQuery = true)
-    List<Produto> buscaPorTrechoDeNome(@Param("trechoNome") String trechoNome);
+    @Query(value = "SELECT * FROM produtos WHERE nome LIKE %:trechoNome% AND status = 'ativo'", nativeQuery = true)
+    List<Produto> buscaPorTrechoDeNomeClient(@Param("trechoNome") String trechoNome);
 
-    @Query(value = "SELECT * FROM produtos WHERE desconto > 0", nativeQuery = true)
-    List<Produto> buscaProdutosNaPromocao();
+    @Query(value = "SELECT * FROM produtos WHERE desconto > 0 AND status = 'ativo'", nativeQuery = true)
+    List<Produto> buscaProdutosNaPromocaoClient();
 
-    List<Produto> findByCategoriaOrderByPrecoAsc(Categoria categoria);
+    @Query(value = "SELECT * FROM produtos WHERE categoria = :categoria AND status = 'ativo' ORDER BY preco ASC", nativeQuery = true)
+    List<Produto> findByCategoriaOrderByPrecoAscClient(@Param("categoria") Categoria categoria);
 
-    @Query(value = "SELECT * FROM produtos WHERE nome LIKE %:trechoNome% ORDER BY preco ASC", nativeQuery = true)
-    List<Produto> buscaMenoresPrecosPorPesquisa(@Param("trechoNome") String trechoNome);
+    @Query(value = "SELECT * FROM produtos WHERE nome LIKE %:trechoNome% AND status = 'ativo' ORDER BY preco ASC", nativeQuery = true)
+    List<Produto> buscaMenoresPrecosPorPesquisaClient(@Param("trechoNome") String trechoNome);
+
+    @Query(value = "SELECT * FROM produtos WHERE status = 'ativo'", nativeQuery = true)
+    List<Produto> findAllClient();
 }

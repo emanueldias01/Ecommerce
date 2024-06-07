@@ -18,15 +18,15 @@ public class ProdutoServiceClient extends ProdutoValidations {
     private ProdutoRepository repository;
 
     public List<ProdutoResponseDTO> getAllProdutosService(){
-        return repository.findAll().stream().map(ProdutoResponseDTO::new).toList();
+        return repository.findAllClient().stream().map(ProdutoResponseDTO::new).toList();
     }
 
     public List<ProdutoResponseDTO> getProdutosByCategoriaService(Categoria categoria){
-        return repository.findByCategoria(categoria).stream().map(ProdutoResponseDTO::new).toList();
+        return repository.findByCategoriaClient(categoria).stream().map(ProdutoResponseDTO::new).toList();
     }
 
     public List<ProdutoResponseDTO> getProdutoTrechoNomeService(String trechoNome){
-        return repository.buscaPorTrechoDeNome(trechoNome).stream().map(ProdutoResponseDTO::new).toList();
+        return repository.buscaPorTrechoDeNomeClient(trechoNome).stream().map(ProdutoResponseDTO::new).toList();
     }
 
     public ProdutoResponseDTO getProdutoByIdService(String idString) {
@@ -36,14 +36,14 @@ public class ProdutoServiceClient extends ProdutoValidations {
     }
 
     public List<ProdutoResponseDTO> getProdutosNaPromocaoService(){
-        return repository.buscaProdutosNaPromocao().stream().map(ProdutoResponseDTO::new).toList();
+        return repository.buscaProdutosNaPromocaoClient().stream().map(ProdutoResponseDTO::new).toList();
     }
 
     public List<ProdutoResponseDTO> getMenoresPrecosPorCategoriaService(Categoria categoria){
-        return repository.findByCategoriaOrderByPrecoAsc(categoria).stream().map(ProdutoResponseDTO::new).toList();
+        return repository.findByCategoriaOrderByPrecoAscClient(categoria).stream().map(ProdutoResponseDTO::new).toList();
     }
 
     public List<ProdutoResponseDTO> getMenoresPrecosPorPesquisaService(String trechoNome){
-        return repository.buscaMenoresPrecosPorPesquisa(trechoNome).stream().map(ProdutoResponseDTO::new).toList();
+        return repository.buscaMenoresPrecosPorPesquisaClient(trechoNome).stream().map(ProdutoResponseDTO::new).toList();
     }
 }
