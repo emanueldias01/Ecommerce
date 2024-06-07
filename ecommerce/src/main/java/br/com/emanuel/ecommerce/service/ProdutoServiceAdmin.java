@@ -3,6 +3,7 @@ package br.com.emanuel.ecommerce.service;
 import br.com.emanuel.ecommerce.dto.ProdutoRequestDTO;
 import br.com.emanuel.ecommerce.dto.ProdutoResponseDTO;
 import br.com.emanuel.ecommerce.dto.ProdutoUpdateDTO;
+import br.com.emanuel.ecommerce.model.Categoria;
 import br.com.emanuel.ecommerce.model.Produto;
 import br.com.emanuel.ecommerce.model.Status;
 import br.com.emanuel.ecommerce.validations.ProdutoValidations;
@@ -11,6 +12,7 @@ import br.com.emanuel.ecommerce.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -48,5 +50,17 @@ public class ProdutoServiceAdmin extends ProdutoValidations {
     public void deleteProduto(String idString){
         UUID id = UUID.fromString(idString);
         repository.deleteById(id);
+    }
+
+    public List<ProdutoResponseDTO> getAllProdutosAdminService(){
+        return repository.findAll().stream().map(ProdutoResponseDTO::new).toList();
+    }
+
+    public List<ProdutoResponseDTO> getAllByCategoriaProdutosAdminService(Categoria categoria){
+        return repository.findByCategoria(categoria).stream().map(ProdutoResponseDTO::new).toList();
+    }
+
+    public List<ProdutoResponseDTO> getByTrechoNomeProdutoAdmin(String nome){
+        return repository.buscaPorTrechoDeNome(nome).stream().map(ProdutoResponseDTO::new).toList();
     }
 }

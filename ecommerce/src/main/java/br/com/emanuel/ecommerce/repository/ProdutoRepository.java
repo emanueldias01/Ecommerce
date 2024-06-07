@@ -15,8 +15,9 @@ import java.util.UUID;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, UUID> {
 
-    @Query(value = "SELECT * FROM produtos WHERE categoria = :categoria AND status = 'ativo'", nativeQuery = true)
+    @Query("SELECT p FROM Produto p WHERE p.categoria = :categoria AND p.status = br.com.emanuel.ecommerce.model.Status.ativo")
     List<Produto> findByCategoriaClient(@Param("categoria") Categoria categoria);
+
 
     @Query(value = "SELECT * FROM produtos WHERE nome = :nome AND status = 'ativo'", nativeQuery = true)
     Optional<Produto> findByNomeClient(@Param("nome") String nome);
@@ -27,7 +28,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, UUID> {
     @Query(value = "SELECT * FROM produtos WHERE desconto > 0 AND status = 'ativo'", nativeQuery = true)
     List<Produto> buscaProdutosNaPromocaoClient();
 
-    @Query(value = "SELECT * FROM produtos WHERE categoria = :categoria AND status = 'ativo' ORDER BY preco ASC", nativeQuery = true)
+    @Query("SELECT p FROM Produto p WHERE p.categoria = :categoria AND p.status = br.com.emanuel.ecommerce.model.Status.ativo ORDER BY p.preco ASC")
     List<Produto> findByCategoriaOrderByPrecoAscClient(@Param("categoria") Categoria categoria);
 
     @Query(value = "SELECT * FROM produtos WHERE nome LIKE %:trechoNome% AND status = 'ativo' ORDER BY preco ASC", nativeQuery = true)
@@ -35,4 +36,9 @@ public interface ProdutoRepository extends JpaRepository<Produto, UUID> {
 
     @Query(value = "SELECT * FROM produtos WHERE status = 'ativo'", nativeQuery = true)
     List<Produto> findAllClient();
+
+    @Query(value = "SELECT * FROM produtos WHERE nome LIKE %:nome%", nativeQuery = true)
+    List<Produto> buscaPorTrechoDeNome(String nome);
+
+    List<Produto> findByCategoria(Categoria categoria);
 }

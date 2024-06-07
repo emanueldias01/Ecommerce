@@ -90,4 +90,19 @@ public class ProdutoController {
     public ResponseEntity<ProdutoResponseDTO> controllerSetStatus(@RequestBody ProdutoStatusDTO data){
         return ResponseEntity.ok(serviceAdmin.setStatusService(data.id(), data.status()));
     }
+
+    @GetMapping("/admin/getAll")
+    public ResponseEntity<List<ProdutoResponseDTO>> getAllProdutosAdmin(){
+        return ResponseEntity.ok(serviceAdmin.getAllProdutosAdminService());
+    }
+
+    @GetMapping("/admin/getByNome/{trechoNome}")
+    public ResponseEntity<List<ProdutoResponseDTO>> getByTrechoNomeAdmin(@PathVariable String trechoNome){
+        return ResponseEntity.ok(serviceAdmin.getByTrechoNomeProdutoAdmin(trechoNome));
+    }
+
+    @GetMapping("/admin/{categoria}")
+    public ResponseEntity<List<ProdutoResponseDTO>> getByCategoriaAdmin(@PathVariable Categoria categoria){
+        return ResponseEntity.ok(serviceAdmin.getAllByCategoriaProdutosAdminService(categoria));
+    }
 }
