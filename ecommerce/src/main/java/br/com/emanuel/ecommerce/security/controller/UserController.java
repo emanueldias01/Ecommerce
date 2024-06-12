@@ -1,5 +1,6 @@
 package br.com.emanuel.ecommerce.security.controller;
 
+import br.com.emanuel.ecommerce.exceptions.UsuarioJaExisteException;
 import br.com.emanuel.ecommerce.security.dto.LoginRequestDTO;
 import br.com.emanuel.ecommerce.security.dto.RegisterDTO;
 import br.com.emanuel.ecommerce.security.dto.TokenDTO;
@@ -42,7 +43,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterDTO dto){
         if(repository.findByUsername(dto.username()) != null){
-            throw new RuntimeException("User has found");
+            throw new UsuarioJaExisteException("Já existe alguém com esse username registrado");
         }
 
         User userSave = new User();

@@ -28,4 +28,14 @@ public class Handler {
                 ex.getMessage()
         );
     }
+
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorDTO trataUsuarioJaExiste(UsuarioJaExisteException ex){
+        return new ErrorDTO(
+                ex.getLancamento(),
+                ex.getMessage()
+        );
+    }
 }
