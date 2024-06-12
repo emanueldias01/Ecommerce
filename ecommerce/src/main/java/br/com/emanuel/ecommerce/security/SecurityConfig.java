@@ -3,6 +3,7 @@ package br.com.emanuel.ecommerce.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +25,18 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
+                   auth.requestMatchers(HttpMethod.PUT, "/produtos/updateProduto").hasRole("ADMIN");
+                   auth.requestMatchers(HttpMethod.PUT, "/produtos/setStatus").hasRole("ADMIN");
+                   auth.requestMatchers(HttpMethod.PUT, "/produtos/setDesconto").hasRole("ADMIN");
+                   auth.requestMatchers(HttpMethod.POST, "produtos/createProduto").hasRole("ADMIN");
+                   auth.requestMatchers(HttpMethod.DELETE, "/produtos/deleteProduto/{id}").hasRole("ADMIN");
+                   auth.requestMatchers(HttpMethod.GET,"/produtos/admin/{categoria}").hasRole("ADMIN");
+                   auth.requestMatchers(HttpMethod.GET, "/produtos/admin/getByNome/{trechoNome}").hasRole("ADMIN");
+                   auth.requestMatchers(HttpMethod.GET, "/produtos/admin/getAll").hasRole("ADMIN");
+
                    auth.anyRequest().permitAll();
+
+
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
