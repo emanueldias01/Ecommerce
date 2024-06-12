@@ -2,6 +2,8 @@ package br.com.emanuel.ecommerce.security.controller;
 
 import br.com.emanuel.ecommerce.security.dto.LoginRequestDTO;
 import br.com.emanuel.ecommerce.security.dto.RegisterDTO;
+import br.com.emanuel.ecommerce.security.dto.TokenDTO;
+import br.com.emanuel.ecommerce.security.token.TokenService;
 import br.com.emanuel.ecommerce.security.user.User;
 import br.com.emanuel.ecommerce.security.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +26,17 @@ public class UserController {
     @Autowired
     UserRepository repository;
 
+    @Autowired
+    TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO dto){
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
         var auth = authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new TokenDTO(token));
     }
 
     @PostMapping("/register")
