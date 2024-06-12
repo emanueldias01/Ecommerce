@@ -18,6 +18,7 @@ public class EmailRegisterService {
             para continuar com seu cadastro, copie o token e cole no
             aplicativo para que possamos validar este email.
             
+            OBS: O token só é válido por 10 minutos!
             
             TOKEN:
             
