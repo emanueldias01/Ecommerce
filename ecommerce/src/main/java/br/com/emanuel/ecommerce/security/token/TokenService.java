@@ -25,7 +25,7 @@ public class TokenService {
             var token = JWT.create()
                     .withIssuer("ecommerce-api")
                     .withSubject(user.getUsername())
-                    .withExpiresAt(generateTimeValidToken())
+                    .withExpiresAt(generateTimeValidTokenUser())
                     .sign(algorithm);
             return token;
         } catch (JWTCreationException ex){
@@ -46,7 +46,26 @@ public class TokenService {
         }
     }
 
-    private Instant generateTimeValidToken(){
+    private Instant generateTimeValidTokenUser(){
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    public String generateTokenEmail(User user){
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+
+        try{
+            var token = JWT.create()
+                    .withIssuer("ecommerce-api")
+                    .withSubject(user.getEmail())
+                    .withExpiresAt(generateTimeValidTokenEmail())
+                    .sign(algorithm);
+            return token;
+        } catch (JWTCreationException ex){
+            throw new RuntimeException("ERROR: " + ex.getMessage());
+        }
+    }
+
+    private Instant generateTimeValidTokenEmail(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }

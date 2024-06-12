@@ -1,5 +1,8 @@
 package br.com.emanuel.ecommerce.security.controller;
 
+import br.com.emanuel.ecommerce.email.Email;
+import br.com.emanuel.ecommerce.email.EmailRegisterDTO;
+import br.com.emanuel.ecommerce.email.EmailRegisterService;
 import br.com.emanuel.ecommerce.exceptions.UsuarioJaExisteException;
 import br.com.emanuel.ecommerce.security.dto.LoginRequestDTO;
 import br.com.emanuel.ecommerce.security.dto.RegisterDTO;
@@ -30,8 +33,11 @@ public class UserController {
     @Autowired
     TokenService tokenService;
 
+    @Autowired
+    EmailRegisterService emailRegisterService;
+
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDTO dto){
+    public ResponseEntity login(@RequestBody LoginRequestDTO dto) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
         var auth = authenticationManager.authenticate(usernamePassword);
 
@@ -40,15 +46,34 @@ public class UserController {
         return ResponseEntity.ok(new TokenDTO(token));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterDTO dto){
-        if(repository.findByUsername(dto.username()) != null){
-            throw new UsuarioJaExisteException("Já existe alguém com esse USERNAME registrado");
-        }
-        if(repository.findByEmail(dto.email()) != null){
+
+    @PostMapping("/verifyEmail")
+    public ResponseEntity verifyEmail(@RequestBody EmailRegisterDTO dto) {
+
+        if (repository.findByEmail(dto.email()) != null) {
             throw new UsuarioJaExisteException("Já existe alguém com esse EMAIL registrado");
         }
 
+        emailRegisterService.sendEmailRegister((new Email(dto.email())));
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/verifyTokenEmail")
+    public ResponseEntity verifyTokenEmail(@RequestBody TokenDTO dto){
+
+        tokenService.validateToken(dto.token());
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/finalRegister")
+    public ResponseEntity finalRegister(@RequestBody RegisterDTO dto) {
+
+        if (repository.findByUsername(dto.username()) != null) {
+            throw new UsuarioJaExisteException("Já existe alguém com esse USERNAME registrado");
+
+        }
         User userSave = new User();
         String passwordEncrypt = new BCryptPasswordEncoder().encode(dto.password());
 
