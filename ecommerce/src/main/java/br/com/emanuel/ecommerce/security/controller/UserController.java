@@ -43,13 +43,17 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterDTO dto){
         if(repository.findByUsername(dto.username()) != null){
-            throw new UsuarioJaExisteException("Já existe alguém com esse username registrado");
+            throw new UsuarioJaExisteException("Já existe alguém com esse USERNAME registrado");
+        }
+        if(repository.findByEmail(dto.email()) != null){
+            throw new UsuarioJaExisteException("Já existe alguém com esse EMAIL registrado");
         }
 
         User userSave = new User();
         String passwordEncrypt = new BCryptPasswordEncoder().encode(dto.password());
 
         userSave.setUsername(dto.username());
+        userSave.setEmail(dto.email());
         userSave.setPassword(passwordEncrypt);
         userSave.setRole(dto.role());
 
