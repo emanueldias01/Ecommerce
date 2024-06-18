@@ -7,6 +7,8 @@ import br.com.emanuel.ecommerce.service.ProdutoServiceClient;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
+
 
     @Autowired
     private ProdutoServiceClient serviceClient;
@@ -27,19 +30,19 @@ public class ProdutoController {
     //Client Methods
     @GetMapping
     @Operation(description = "Devolve todos os produtos ativos")
-    public ResponseEntity<List<ProdutoResponseDTO>> getAllProdutos(){
-        return ResponseEntity.ok(serviceClient.getAllProdutosService());
+    public ResponseEntity<Page<ProdutoResponseDTO>> getAllProdutos(Pageable paginacao){
+        return ResponseEntity.ok(serviceClient.getAllProdutosService(paginacao));
     }
     @GetMapping("/{categoria}")
     @Operation(description = "Devolve todos os produtos ativos da categoria fornecida na URL")
-    public ResponseEntity<List<ProdutoResponseDTO>> getProdutosByCategoria(@PathVariable Categoria categoria){
-        return ResponseEntity.ok(serviceClient.getProdutosByCategoriaService(categoria));
+    public ResponseEntity<Page<ProdutoResponseDTO>> getProdutosByCategoria(@PathVariable Categoria categoria, Pageable paginacao){
+        return ResponseEntity.ok(serviceClient.getProdutosByCategoriaService(categoria, paginacao));
     }
 
     @GetMapping("/search/name/{trechoNome}")
     @Operation(description = "Devolve todos os produtos ativos que possuem o trecho de nome passado na URL")
-    public ResponseEntity<List<ProdutoResponseDTO>> getProdutosByTrechoNome(@PathVariable String trechoNome){
-        return ResponseEntity.ok(serviceClient.getProdutoTrechoNomeService(trechoNome));
+    public ResponseEntity<Page<ProdutoResponseDTO>> getProdutosByTrechoNome(@PathVariable String trechoNome, Pageable paginacao){
+        return ResponseEntity.ok(serviceClient.getProdutoTrechoNomeService(trechoNome, paginacao));
     }
 
     @GetMapping("/search/id/{id}")
@@ -50,20 +53,20 @@ public class ProdutoController {
 
     @GetMapping("/promocao")
     @Operation(description = "Devolve todos os produtos ativos que estão na promocao")
-    public ResponseEntity<List<ProdutoResponseDTO>> getProdutosNaPromocao(){
-        return ResponseEntity.ok(serviceClient.getProdutosNaPromocaoService());
+    public ResponseEntity<Page<ProdutoResponseDTO>> getProdutosNaPromocao(Pageable paginacao){
+        return ResponseEntity.ok(serviceClient.getProdutosNaPromocaoService(paginacao));
     }
 
     @GetMapping("/menorPreco/{categoria}")
     @Operation(description = "Devolve em ordem os produtos ativos com menores precos da categoria passada na URL")
-    public ResponseEntity<List<ProdutoResponseDTO>> getProdutosMenoresPrecosPorCategoria(@PathVariable Categoria categoria){
-        return ResponseEntity.ok(serviceClient.getMenoresPrecosPorCategoriaService(categoria));
+    public ResponseEntity<Page<ProdutoResponseDTO>> getProdutosMenoresPrecosPorCategoria(@PathVariable Categoria categoria, Pageable paginacao){
+        return ResponseEntity.ok(serviceClient.getMenoresPrecosPorCategoriaService(categoria, paginacao));
     }
 
     @GetMapping("/search/menorPreco/{trechoNome}")
     @Operation(description = "Devolve os menores precos dos produtos ativos com o trecho de nome passado na URL")
-    public ResponseEntity<List<ProdutoResponseDTO>> getProdutosMenorPrecoPorPesquisa(@PathVariable String trechoNome){
-        return ResponseEntity.ok(serviceClient.getMenoresPrecosPorPesquisaService(trechoNome));
+    public ResponseEntity<Page<ProdutoResponseDTO>> getProdutosMenorPrecoPorPesquisa(@PathVariable String trechoNome, Pageable paginacao){
+        return ResponseEntity.ok(serviceClient.getMenoresPrecosPorPesquisaService(trechoNome, paginacao));
     }
 
     //Adm Methods
@@ -108,19 +111,19 @@ public class ProdutoController {
 
     @GetMapping("/admin/getAll")
     @Operation(description = "devolve todos os produtos")
-    public ResponseEntity<List<ProdutoResponseDTO>> getAllProdutosAdmin(){
-        return ResponseEntity.ok(serviceAdmin.getAllProdutosAdminService());
+    public ResponseEntity<List<ProdutoResponseDTO>> getAllProdutosAdmin(Pageable paginacao){
+        return ResponseEntity.ok(serviceAdmin.getAllProdutosAdminService(paginacao));
     }
 
     @GetMapping("/admin/getByNome/{trechoNome}")
     @Operation(description = "devolve todos os produtos que possui o trecho de nome passado na URL")
-    public ResponseEntity<List<ProdutoResponseDTO>> getByTrechoNomeAdmin(@PathVariable String trechoNome){
-        return ResponseEntity.ok(serviceAdmin.getByTrechoNomeProdutoAdmin(trechoNome));
+    public ResponseEntity<List<ProdutoResponseDTO>> getByTrechoNomeAdmin(@PathVariable String trechoNome, Pageable paginacao){
+        return ResponseEntity.ok(serviceAdmin.getByTrechoNomeProdutoAdmin(trechoNome, paginacao));
     }
 
     @GetMapping("/admin/{categoria}")
     @Operation(description = "devolve todos os produtos da categoria passada na URL")
-    public ResponseEntity<List<ProdutoResponseDTO>> getByCategoriaAdmin(@PathVariable Categoria categoria){
-        return ResponseEntity.ok(serviceAdmin.getAllByCategoriaProdutosAdminService(categoria));
+    public ResponseEntity<List<ProdutoResponseDTO>> getByCategoriaAdmin(@PathVariable Categoria categoria, Pageable paginacao){
+        return ResponseEntity.ok(serviceAdmin.getAllByCategoriaProdutosAdminService(categoria, paginacao));
     }
 }

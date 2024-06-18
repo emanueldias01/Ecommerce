@@ -6,9 +6,10 @@ import br.com.emanuel.ecommerce.model.Produto;
 import br.com.emanuel.ecommerce.repository.ProdutoRepository;
 import br.com.emanuel.ecommerce.validations.ProdutoValidations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -17,16 +18,17 @@ public class ProdutoServiceClient extends ProdutoValidations {
     @Autowired
     private ProdutoRepository repository;
 
-    public List<ProdutoResponseDTO> getAllProdutosService(){
-        return repository.findAllClient().stream().map(ProdutoResponseDTO::new).toList();
+
+    public Page<ProdutoResponseDTO> getAllProdutosService(Pageable paginacao){
+        return repository.findAllClient(paginacao).map(ProdutoResponseDTO::new);
     }
 
-    public List<ProdutoResponseDTO> getProdutosByCategoriaService(Categoria categoria){
-        return repository.findByCategoriaClient(categoria).stream().map(ProdutoResponseDTO::new).toList();
+    public Page<ProdutoResponseDTO> getProdutosByCategoriaService(Categoria categoria, Pageable paginacao){
+        return repository.findByCategoriaClient(categoria, paginacao).map(ProdutoResponseDTO::new);
     }
 
-    public List<ProdutoResponseDTO> getProdutoTrechoNomeService(String trechoNome){
-        return repository.buscaPorTrechoDeNomeClient(trechoNome).stream().map(ProdutoResponseDTO::new).toList();
+    public Page<ProdutoResponseDTO> getProdutoTrechoNomeService(String trechoNome, Pageable paginacao){
+        return repository.buscaPorTrechoDeNomeClient(trechoNome, paginacao).map(ProdutoResponseDTO::new);
     }
 
     public ProdutoResponseDTO getProdutoByIdService(String idString) {
@@ -35,15 +37,15 @@ public class ProdutoServiceClient extends ProdutoValidations {
         return new ProdutoResponseDTO(produto);
     }
 
-    public List<ProdutoResponseDTO> getProdutosNaPromocaoService(){
-        return repository.buscaProdutosNaPromocaoClient().stream().map(ProdutoResponseDTO::new).toList();
+    public Page<ProdutoResponseDTO> getProdutosNaPromocaoService(Pageable paginacao){
+        return repository.buscaProdutosNaPromocaoClient(paginacao).map(ProdutoResponseDTO::new);
     }
 
-    public List<ProdutoResponseDTO> getMenoresPrecosPorCategoriaService(Categoria categoria){
-        return repository.findByCategoriaOrderByPrecoAscClient(categoria).stream().map(ProdutoResponseDTO::new).toList();
+    public Page<ProdutoResponseDTO> getMenoresPrecosPorCategoriaService(Categoria categoria, Pageable paginacao){
+        return repository.findByCategoriaOrderByPrecoAscClient(categoria, paginacao).map(ProdutoResponseDTO::new);
     }
 
-    public List<ProdutoResponseDTO> getMenoresPrecosPorPesquisaService(String trechoNome){
-        return repository.buscaMenoresPrecosPorPesquisaClient(trechoNome).stream().map(ProdutoResponseDTO::new).toList();
+    public Page<ProdutoResponseDTO> getMenoresPrecosPorPesquisaService(String trechoNome, Pageable paginacao){
+        return repository.buscaMenoresPrecosPorPesquisaClient(trechoNome, paginacao).map(ProdutoResponseDTO::new);
     }
 }

@@ -10,6 +10,7 @@ import br.com.emanuel.ecommerce.validations.ProdutoValidations;
 import br.com.emanuel.ecommerce.repository.ProdutoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,15 +53,15 @@ public class ProdutoServiceAdmin extends ProdutoValidations {
         repository.deleteById(id);
     }
 
-    public List<ProdutoResponseDTO> getAllProdutosAdminService(){
+    public List<ProdutoResponseDTO> getAllProdutosAdminService(Pageable paginacao){
         return repository.findAll().stream().map(ProdutoResponseDTO::new).toList();
     }
 
-    public List<ProdutoResponseDTO> getAllByCategoriaProdutosAdminService(Categoria categoria){
-        return repository.findByCategoria(categoria).stream().map(ProdutoResponseDTO::new).toList();
+    public List<ProdutoResponseDTO> getAllByCategoriaProdutosAdminService(Categoria categoria, Pageable paginacao){
+        return repository.findByCategoria(categoria, paginacao).map(ProdutoResponseDTO::new).toList();
     }
 
-    public List<ProdutoResponseDTO> getByTrechoNomeProdutoAdmin(String nome){
-        return repository.buscaPorTrechoDeNome(nome).stream().map(ProdutoResponseDTO::new).toList();
+    public List<ProdutoResponseDTO> getByTrechoNomeProdutoAdmin(String nome, Pageable paginacao){
+        return repository.buscaPorTrechoDeNome(nome, paginacao).map(ProdutoResponseDTO::new).toList();
     }
 }
