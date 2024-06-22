@@ -7,6 +7,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Service
 public class EmailRegisterService {
 
@@ -35,9 +37,9 @@ public class EmailRegisterService {
         var user = new User();
         user.setEmail(email.getTo());
 
-        var token = 0;
+        int number = 10000 + (int)(Math.random() * 90000);
 
-        mensagem.setText(mensagemDeCriacaoDeConta + token);
+        mensagem.setText(mensagemDeCriacaoDeConta + number);
 
         mailSender.send(mensagem);
     }
