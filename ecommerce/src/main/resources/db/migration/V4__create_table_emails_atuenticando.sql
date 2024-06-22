@@ -1,5 +1,5 @@
-CREATE TABLE emails-autenticando(
+CREATE TABLE emails_autenticando(
     id SERIAL,
     email VARCHAR(255),
-    data-validacacao TIMESTAMP
+    validacacao TIMESTAMP
 );
