@@ -15,20 +15,17 @@ public class EmailRegisterService {
     private final String mensagemDeCriacaoDeConta = """
             Olá, tudo bem?
             Vi que você está se registrando na nossa plataforma,
-            para continuar com seu cadastro, copie o token e cole no
+            para continuar com seu cadastro, copie o número e cole no
             aplicativo para que possamos validar este email.
             
-            OBS: O token só é válido por 10 minutos!
+            OBS: O número só é válido por 10 minutos!
             
-            TOKEN:
+            COPIE E COLE:
             
             """;
 
     @Autowired
     JavaMailSender mailSender;
-
-    @Autowired
-    TokenService tokenService;
 
     public void sendEmailRegister(Email email){
         var mensagem = new SimpleMailMessage();
@@ -38,7 +35,7 @@ public class EmailRegisterService {
         var user = new User();
         user.setEmail(email.getTo());
 
-        var token = tokenService.generateTokenEmail(user);
+        var token = 0;
 
         mensagem.setText(mensagemDeCriacaoDeConta + token);
 
