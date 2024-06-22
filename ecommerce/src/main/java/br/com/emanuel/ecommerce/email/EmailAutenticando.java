@@ -17,6 +17,8 @@ public class EmailAutenticando {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
+
+    @Column(name = "validacacao")
     private LocalDateTime validacao;
     private Integer numero;
 

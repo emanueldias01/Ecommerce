@@ -3,6 +3,7 @@ package br.com.emanuel.ecommerce.security.controller;
 import br.com.emanuel.ecommerce.email.Email;
 import br.com.emanuel.ecommerce.email.EmailRegisterDTO;
 import br.com.emanuel.ecommerce.email.EmailRegisterService;
+import br.com.emanuel.ecommerce.email.EmailVerifyDTO;
 import br.com.emanuel.ecommerce.exceptions.UsuarioJaExisteException;
 import br.com.emanuel.ecommerce.security.dto.LoginRequestDTO;
 import br.com.emanuel.ecommerce.security.dto.RegisterDTO;
@@ -11,6 +12,7 @@ import br.com.emanuel.ecommerce.security.service.UserService;
 import br.com.emanuel.ecommerce.security.token.TokenService;
 import br.com.emanuel.ecommerce.security.user.User;
 import br.com.emanuel.ecommerce.security.user.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,16 +36,17 @@ public class UserController {
     }
 
 
+    @Transactional
     @PostMapping("/verifyEmail")
     public ResponseEntity verifyEmail(@RequestBody EmailRegisterDTO dto) {
         service.verifyEmailService(dto);
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     @PostMapping("/verifyTokenEmail")
-    public ResponseEntity verifyTokenEmail(@RequestBody TokenDTO dto){
-        service.validateEmailTokenService(dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity verifyTokenEmail(@RequestBody EmailVerifyDTO dto){
+        return ResponseEntity.ok(service.validateNumberEmail(dto));
     }
 
     @PostMapping("/finalRegister")

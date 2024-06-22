@@ -3,6 +3,8 @@ package br.com.emanuel.ecommerce.security.service;
 import br.com.emanuel.ecommerce.email.Email;
 import br.com.emanuel.ecommerce.email.EmailRegisterDTO;
 import br.com.emanuel.ecommerce.email.EmailRegisterService;
+import br.com.emanuel.ecommerce.email.EmailVerifyDTO;
+import br.com.emanuel.ecommerce.email.repository.EmailAutenticacaoRepository;
 import br.com.emanuel.ecommerce.exceptions.UsuarioJaExisteException;
 import br.com.emanuel.ecommerce.security.dto.LoginRequestDTO;
 import br.com.emanuel.ecommerce.security.dto.RegisterDTO;
@@ -15,6 +17,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class UserService {
@@ -31,6 +35,9 @@ public class UserService {
     @Autowired
     EmailRegisterService emailRegisterService;
 
+    @Autowired
+    EmailAutenticacaoRepository emailAutenticacaoRepository;
+
     public String loginService(LoginRequestDTO dto){
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
         var auth = authenticationManager.authenticate(usernamePassword);
@@ -46,8 +53,20 @@ public class UserService {
         emailRegisterService.sendEmailRegister((new Email(dto.email())));
     }
 
-    public void validateEmailTokenService(TokenDTO dto){
-        tokenService.validateToken(dto.token());
+    public String validateNumberEmail(EmailVerifyDTO dto){
+        Integer numeroDoEmail = emailAutenticacaoRepository.buscaNumeroAssociadoAoEmail(dto.email());
+
+        if(dto.numero() != numeroDoEmail){
+            throw new RuntimeException("O número inserido está incorreto");
+        }
+        LocalDateTime dataValidacao = emailAutenticacaoRepository.buscaDataDeValidacao(dto.email());
+        if(LocalDateTime.now().isAfter(dataValidacao.plusMinutes(10))){
+            emailAutenticacaoRepository.deleteByEmail(dto.email());
+            throw new RuntimeException("O tempo de validacao já passou!");
+        }
+
+        emailAutenticacaoRepository.deleteByEmail(dto.email());
+        return dto.email();
     }
 
     public void finalRegisterUserService(RegisterDTO dto){
