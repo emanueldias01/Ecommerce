@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @Transactional
-    @PostMapping("/verifyTokenEmail")
+    @PostMapping("/verifyNumberEmail")
     public ResponseEntity verifyTokenEmail(@RequestBody EmailVerifyDTO dto){
         return ResponseEntity.ok(service.validateNumberEmail(dto));
     }
