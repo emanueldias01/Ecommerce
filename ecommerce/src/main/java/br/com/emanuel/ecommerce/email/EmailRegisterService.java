@@ -1,5 +1,6 @@
 package br.com.emanuel.ecommerce.email;
 
+import br.com.emanuel.ecommerce.email.repository.EmailAutenticacaoRepository;
 import br.com.emanuel.ecommerce.security.token.TokenService;
 import br.com.emanuel.ecommerce.security.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class EmailRegisterService {
     @Autowired
     JavaMailSender mailSender;
 
+    @Autowired
+    EmailAutenticacaoRepository emailAutenticacaoRepository;
+
     public void sendEmailRegister(Email email){
         var mensagem = new SimpleMailMessage();
         mensagem.setTo(email.getTo());
@@ -40,6 +44,8 @@ public class EmailRegisterService {
         int number = 10000 + (int)(Math.random() * 90000);
 
         mensagem.setText(mensagemDeCriacaoDeConta + number);
+        EmailAutenticando emailSave = new EmailAutenticando(email.getTo(), number);
+        emailAutenticacaoRepository.save(emailSave);
 
         mailSender.send(mensagem);
     }
